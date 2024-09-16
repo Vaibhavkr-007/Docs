@@ -1,9 +1,17 @@
-#!/bin/bash
-echo 'deb https://packages.grafana.com/oss/deb stable main' >> /etc/apt/sources.list
-curl https://packages.grafana.com/gpg.key | sudo apt-key add -
-sudo apt-get update
-sudo apt-get -y install grafana
+sudo tee /etc/yum.repos.d/grafana.repo <<EOF
+[grafana]
+name=Grafana OSS
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+sslverify=1
+EOF
 
-systemctl daemon-reload
-systemctl start grafana-server
-systemctl enable grafana-server.service
+
+sudo yum install -y grafana
+
+sudo systemctl daemon-reload
+sudo systemctl start grafana-server
+sudo systemctl enable grafana-server.service
